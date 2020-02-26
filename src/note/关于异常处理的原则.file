@@ -1,0 +1,1 @@
+在mvc分层结构中,一般dao层和service将异常throw出去，由controller层去处理（try_catch或者做统一的处理）

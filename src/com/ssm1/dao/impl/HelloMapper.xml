@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="h_test">
+	<insert id="insertTest" parameterType="com.ssm1.bean.H_test">
+		insert into h_test (id,name,sex,age) values (#{id},#{name},#{sex},#{age})
+	</insert>
+	
+	<!-- 查询list -->
+	<select id="selectTest"  resultType="com.ssm1.bean.H_test">
+		select * from h_test
+	</select>
+	
+	
+	<!-- 根据id删除 -->
+	<select id="selectById"  parameterType="String" resultType="com.ssm1.bean.H_test">
+		select * from h_test where id=#{id}
+	</select>
+	
+	<!-- 根据id删除 -->
+	<delete id="deleteTest"  parameterType="String">
+		delete from h_test where id=#{id}
+	</delete>
+	
+	<!-- 更新h_test -->
+	<update id="updateTest"  parameterType="com.ssm1.bean.H_test">
+		update h_test set name=#{name},age=#{age},sex=#{sex} where id=#{id}
+	</update>
+	
+</mapper>

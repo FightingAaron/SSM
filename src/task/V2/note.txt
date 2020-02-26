@@ -1,0 +1,4 @@
+spring3.0版本后 自带task 可看做轻量级quartz 相对quartz操作简单些
+实现方式有两种：
+1.xml形式
+2.注解形式

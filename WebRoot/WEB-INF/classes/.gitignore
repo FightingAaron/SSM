@@ -1,0 +1,13 @@
+/applicationContext.xml
+/applicationContext.xml.bak
+/com/
+/db.properties
+/init/
+/log4j.properties
+/mybatis.xml
+/note/
+/plugin/
+/spring/
+/struts/
+/struts.xml
+/task/

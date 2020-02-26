@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.DemoDao">
+	<insert id="insertTest">
+		insert into h_test (id,name,sex,age) values (#{id},#{name},#{sex},#{age})
+	</insert>
+	
+	
+	<insert id="insertUser" parameterType="java.util.Map">
+		INSERT INTO USER (ID,USERNAME,PASSWORD) VALUES (#{userId},#{userName},#{passWord})
+	</insert>
+	
+
+</mapper>

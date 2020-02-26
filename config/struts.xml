@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC  
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"  
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 指定默认的编码集 -->
+	<!-- <constant name="struts.i18n.encoding" value="UTF-8"></constant> -->
+	<constant name="struts.configuration.xmlreload" value="true"></constant><!-- 修改xml文件后是否自动加载 -->
+	<constant name="struts.devMode" value="false"></constant><!-- 开发模式下打印错误的详细信息 -->
+	<!--<constant name="struts.ui.theme" value="xhtml"></constant> --><!-- 标准的ui主题，默认是xhtml 可以是simple，xhtml,或者ajax -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/><!-- struts的动态地址的访问，即xxxAction!方法名.action 去访问-->
+	
+	<package name="SSM" namespace="/" extends="struts-default">
+		<action name="hello" class="helloAction">
+			<result name="add">/WEB-INF/jsp/hello/add.jsp</result>
+			<result name="index">/WEB-INF/jsp/hello/demoIndex.jsp</result>
+			<result name="update" type="redirectAction">
+				<param name="actionName">hello!execute.action</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">hello</param>
+			</result>	
+		</action>
+		<action name="demo" class="demoAction"> 
+			<result name="index">/WEB-INF/jsp/demo/demoIndex.jsp</result>
+        </action>
+        
+        
+<!-- 		<action name="quartz" class="com.quartz.action.QuartzAction">
+			<result name="index">/WEB-INF/jsp/quartz/Index.jsp</result>		
+		</action> -->
+   	</package>
+   	
+   	
+   	
+   	<!-- 引入其他的配置文件  -->
+   	<!-- 定时任务struts配置文件 -->
+   	<include file="struts/struts-quartz.xml"/>
+</struts>

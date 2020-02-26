@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"   
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans.xsd  
+           http://www.springframework.org/schema/aop   
+           http://www.springframework.org/schema/aop/spring-aop.xsd  
+           http://www.springframework.org/schema/tx  
+           http://www.springframework.org/schema/tx/spring-tx.xsd  
+           http://www.springframework.org/schema/jdbc   
+           http://www.springframework.org/schema/jdbc/spring-jdbc.xsd  
+           http://www.springframework.org/schema/context  
+           http://www.springframework.org/schema/context/spring-context.xsd"> 
+	<!-- 采取注解的方式 -->
+	<context:annotation-config/>
+	
+	<!-- 配置需要扫描的包 -->
+	<context:component-scan base-package="com.ssm"></context:component-scan>
+	
+	<!-- 配置数据源属性文件 -->
+	<bean id="propertyPlaceholder" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:db.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${dataSource.driver}"/>
+		<property name="url" value="${dataSource.url}"/>
+		<property name="username" value="${dataSource.username}"/>
+		<property name="password" value="${dataSource.password}"/>
+		<property name="minIdle" value="${dataSource.minIdle}"/><!-- 队列中的最小等待数 -->
+		<property name="maxIdle" value="${dataSource.maxIdle}"/><!-- 队列中的最大的等待数-->
+		<property name="maxWait" value="${dataSource.maxWait}"/><!-- 最长等待时间 单位为毫秒 -->
+		<property name="maxActive" value="${dataSource.maxActive}"/><!-- 最大活跃数 -->
+		<property name="initialSize" value="${dataSource.initialSize}"/><!-- 初始化个数 -->
+	</bean>
+	
+	<!-- 配置sqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:mybatis.xml"/>
+		<!-- 配置mybatis数据处理的方式 共四种方式 这里采用MapperScannerConfigurer方式 -->
+     	<!-- 
+     		SqlSessionTemplate 这个需要配置文件 在实现类中注入sqlsession 再使用sqlsession 是细颗粒控制
+     		SqlSessionDaoSupport 这个只需要在实现类中继承特殊类就可以使用sqlsession
+     		MapperFactoryBean 这个要写配置文件 把对应的所有接口在配置文件中引用即可 无需写实现类
+     		MapperScannerConfigurer  这个要写配置文件 只要给接口所在的包即可 会自动把包中的接口引入 无需写实现类
+     	 -->
+	</bean>
+	
+	
+	    
+    <!--1. 配置DemoAction(使用注解时) -->
+    <bean id="demoAction" class="com.ssm.action.DemoAction"></bean>
+	
+	<!-- 此种方式适合配合注解使用 不需要配置其实现类 -->
+ 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.ssm.dao"/><!-- 可使用通配符  com.*.dao.impl -->		
+	</bean>
+	
+ 
+    <!-- 3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory 
+         basePackage:指定sql映射文件/接口所在的包（自动扫描） -->
+<!--      <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.*.dao"></property>
+         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean> -->
+	
+	
+	<!-- jdbc初始化数据库 
+    <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE" enabled="${jdbc.initializedatabase}">  
+        <jdbc:script encoding="utf-8" location="/WEB-INF/db-init.sql"/>  
+    </jdbc:initialize-database>   -->
+    
+    <!--2. 配置HelloAction(不使用注解时) -->
+    <bean id="helloAction" class="com.ssm1.action.HelloAction">
+    	<property name="helloService" ref="helloService"></property>
+    </bean>
+    
+    <bean id="helloService" class="com.ssm1.service.impl.HelloServiceImpl">
+    	<property name="helloDao" ref="helloDao"></property>
+    </bean>
+    
+    <bean id="helloDao" class="com.ssm1.dao.impl.HelloDaoImpl">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+    
+    <!-- 定时任务控制器 -->
+    <!-- <bean id="quartzAction" class="com.quartz.action.QuartzAction"></bean> -->
+    
+    <!-- spring 事务配置 -->
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	 <!-- 配置事务的属性 -->
+	 <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+        <!-- <tx:method name="方法名" propagation="REQUIRES_NEW"/>   -->  <!--新开事务-->
+        <tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>                                    <!--使用原有事务-->
+    </tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置事务切入点 注入事务属性 -->
+	<aop:config>
+    	<aop:pointcut expression="execution(public * com.ssm.service.*.*(..))" id="txPointCut"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+	</aop:config>
+	
+	
+	<!-- 引入分模块spring配置文件 -->
+	<import resource="classpath*:/spring/applicationContext-quartz.xml" />	
+	
+	
+	<!-- 初始化方法 -->
+	<bean class = "init.InitAll" init-method="init">
+		<property name="initTask" ref="initTask"></property>	
+	</bean>
+ </beans> 

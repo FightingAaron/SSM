@@ -1,0 +1,65 @@
+链接：https://blog.csdn.net/prayallforyou/article/details/51648839
+
+
+无论是提交form表单还是从URL中直接获取，struts2的action类中获取请求参数值，总的来说有2种方式：
+
+第一种在action中定义同名变量，提供get/set方法。
+
+第二种方式是手动获取HttpServletRequest，然后调用request.getParameter()。
+
+
+
+第一种方式：action中定义同名变量，提供get/set方法
+
+public class Action {
+
+    private String name ;
+    private String phone;
+    
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    public String query(){
+
+           // 直接调用getName()和getPhone()函数，就可以得到表单提交，和url里的name 和 phone的参数
+
+        System.out.println(getName()+" "+getPhone());
+        return "index";
+    }
+
+
+
+第二种方法：获取HttpServletRequest，然后调用request.getParameter()
+
+
+
+
+public class Action
+{  
+    public String query(){
+    {
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String name = request.getParameter("name");
+        String age = request.getParameter("phone");
+         return "index";
+    }
+}
+
+
+
+这2种方式有什么差别呢？很显然是成员变量和局部变量的区别。
+我们知道一个action可以定义多个public方法，用来处理不同的前台请求。
+如果同一个请求参数，会被多个方法使用，那么就适合用第一种方式；
+如果一个请求参数，仅仅只会被一个方法使用，就适合使用第二种方式。
+原则就是：保证同一个参数名称在action代码中只出现一次（避免重复），
+而且变量的作用范围要尽可能的小（代码内聚）

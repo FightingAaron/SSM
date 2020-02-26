@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 针对oracle  -->
+<mapper namespace="quartz">
+	<select id="getAllTasks" resultType="com.quartz.bean.TaskBean">
+		select * from h_job
+	</select>
+
+	<insert id="addTask" parameterType="com.quartz.bean.TaskBean">
+		INSERT INTO h_job (ID, NAME, TYPE, STATUS, IFAUTOBOOT, EXECUTIONPOLICY, TASKCLASS, DESCRIPTION, CREATEDATE, UPDATEDATE, OPERATOR) VALUES 
+		(#{id}, #{name}, #{type}, #{status}, #{ifAutoBoot}, #{executionPolicy}, #{taskClass},#{description}, #{createDate}, #{updateDate}, #{operator})
+	</insert>
+	
+	<update id="updateTask" parameterType="com.quartz.bean.TaskBean">
+		update h_job set NAME=#{name}, TYPE=#{type}, STATUS=#{status}, IFAUTOBOOT=#{ifAutoBoot}, EXECUTIONPOLICY=#{executionPolicy}, TASKCLASS=#{taskClass}, DESCRIPTION=#{description}, UPDATEDATE=sysdate, OPERATOR=#{operator} where ID=#{id}
+	</update>
+	
+	<delete id="deleteTask" parameterType="String">
+		delete from h_job where id=#{id}
+	</delete>
+	
+	
+	<select id="selectById" parameterType="String" resultType="com.quartz.bean.TaskBean">
+		select * from h_job where id=#{id}
+	</select>
+	
+	
+	<select id="selectByName" resultType="com.quartz.bean.TaskBean" parameterType="String">
+		<!-- oracle -->
+		select * from h_job where name like '%'||#{name}||'%'
+		<!-- select * from h_job where name like concat(#{name},'%') -->
+		
+		<!-- mysql -->
+		<!-- select * from h_job where name like '%'#{name}\'%' -->
+		<!-- select * from task where name like concat(concat('%',#{name}),'%') -->
+		<!-- select * from task where name like CONCAT('%','${name}','%') -->
+	</select>
+	
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+      <!-- sql打印
+      <settings>
+         <setting name="logImpl" value="STDOUT_LOGGING" />
+      </settings> -->
+	<!-- 别名 -->
+	<typeAliases></typeAliases>
+	<mappers>
+		<mapper resource="com/ssm/dao/impl/DemoMapper.xml"/>
+		<mapper resource="com/ssm1/dao/impl/HelloMapper.xml"/>
+		<mapper resource="com/quartz/dao/impl/QuartzMapper.xml"/>
+	</mappers>
+	
+</configuration>

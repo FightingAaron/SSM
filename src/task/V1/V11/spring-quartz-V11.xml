@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:task="http://www.springframework.org/schema/task"   
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"   
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans.xsd  
+           http://www.springframework.org/schema/aop   
+           http://www.springframework.org/schema/aop/spring-aop.xsd  
+           http://www.springframework.org/schema/tx  
+           http://www.springframework.org/schema/tx/spring-tx.xsd  
+           http://www.springframework.org/schema/jdbc   
+           http://www.springframework.org/schema/jdbc/spring-jdbc.xsd  
+           http://www.springframework.org/schema/context  
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/task 
+           http://www.springframework.org/schema/task/spring-task.xsd"> 
+
+ <bean id="job1" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+ 	<property name="jobClass" value="task.V1.V11.Job1"></property>
+ 	<property name="jobDataAsMap">
+ 		<map>
+ 			<entry key="timeout" value="0"/>
+ 		</map>
+ 	</property>
+ </bean>
+ 
+ 
+  <bean id="job2" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+ 	<property name="jobClass" value="task.V1.V11.Job2"></property>
+ 	<property name="jobDataAsMap">
+ 		<map>
+ 			<entry key="timeout" value="0"/>
+ 		</map>
+ 	</property>
+ </bean>
+ 
+ 
+ <!-- SimpleTriggerBean 触发器 -->
+<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	<property name="jobDetail" ref="job1"></property>
+	<property name="startDelay" value="0"></property><!-- 调度工厂实例化后  经过0s开始执行调度 -->
+	<property name="repeatInterval" value="2000"></property><!-- 每2s执行一次 -->
+</bean>
+
+
+<!-- CronTriggerBean 触发器 -->
+<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<property name="JobDetail" ref="job2"></property>
+	<property name="cronExpression" value="0/10 * * ? * *"></property><!-- 每隔10s执行一次 -->
+</bean>
+
+
+<!-- 调度器 -->
+<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<property name="triggers">
+		<list>
+			<ref bean="cronTrigger"/>
+			<ref bean="simpleTrigger"/>
+		</list>
+	</property>
+</bean>
+
+
+
+</beans>

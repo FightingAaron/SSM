@@ -1,0 +1,110 @@
+struts向jsp传值     
+链接：https://blog.csdn.net/fsc200871046/article/details/52456086
+
+大体会有三种形式：
+1.定义全局变量 添加get set方法  方法中赋值  jsp页面通过s标签获取 
+2.//第二种方式通过ActionContext完成值得传递
+  ActionContext.getContext().put("aaa",123456);
+  ActionContext.getContext().put("bbb",78910);
+  
+ 3.//第三种的传值方式Servlet api来传值
+  //这里一定要记得加入servlet api.jar这个包否则会报错 在tomcat lib 目录下
+  //这里一样是把之放到actioncontext 但是这里在Jsp页面获取要通过request.***来获取
+  
+  
+ 如果要获取jsp传过来的值只要acton中有get方法即可但是要注意比如setName 这里传过来的参数必须叫做name
+
+UserActon
+
+package com.bnuep.action;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.ActionContext;
+
+public class UserAction {
+
+ String name;
+ String pass;
+
+ public String add() {
+  System.out.println("add");
+  return "r_list";
+ }
+
+ public String addInput() {
+  //获取Jsp传过来的值这里是通过getName这个方法来传值所以必须要有get方法
+  System.out.println(name + "  " + pass);
+  return "success";
+ }
+
+ public String getName() {
+  return name;
+ }
+
+ public String getPass() {
+  return pass;
+ }
+
+ public String list() {
+  //传值的的第一种方式直接在action中getset方法完成值的传递
+  this.setName("Damon");
+  this.setPass("123");
+  System.out.println("list");
+  //第二种方式通过ActionContext完成值得传递
+  ActionContext.getContext().put("aaa",123456);
+  ActionContext.getContext().put("bbb",78910);
+  //第三种的传值方式Servlet api来传值
+  //这里一定要记得加入servlet api.jar这个包否则会报错 在tomcat lib 目录下
+  //这里一样是把之放到actioncontext
+  ServletActionContext.getRequest().setAttribute("hello","Jack");
+  return "success";
+ }
+
+ public String select() {
+  System.out.println("select");
+  return "success";
+ }
+
+ public void setName(String name) {
+  this.name = name;
+ }
+
+ public void setPass(String pass) {
+  this.pass = pass;
+ }
+}
+list.xml
+
+<%@ page language="java" contentType="text/html; charset=GB18030"
+ pageEncoding="GB18030"%>
+<%@taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB18030">
+<title>Insert title here</title>
+</head>
+<body>
+ <br> list ${name}------${pass}
+ <s:property value="name" />
+ ----------------------------
+ <s:property value="pass" />
+ <hr/>
+ ${aaa}------${bbb}
+ 
+ <!--使用s:property来访问actioncontext中的数据都需要加#号在struts2.3之后
+ 如果actioncontext的值是string类型就不用加#号 但是在项目开发中一定要加 #号-->
+ 
+ <s:property value="#aaa" />
+ ----------------------------
+ <s:property value="#bbb" />
+ 
+ ${hello}
+ <s:property value="#request.hello"/>
+ <s:debug></s:debug>
+ <br>
+</body>
+</html> 
+ 
+  ServletActionContext.getRequest().setAttribute("hello","Jack");

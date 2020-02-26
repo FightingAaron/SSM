@@ -1,0 +1,7 @@
+Spring Quartz
+有两种实现方式：
+1.作业类实现特定的基类  org.springframework.scheduling.quartz.QuartzJobBean  V11
+2.作业类不继承特定基类,spring支持此种方式主要归功于两个类：
+	org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean 
+	org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean
+

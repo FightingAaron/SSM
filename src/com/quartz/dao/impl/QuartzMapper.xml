@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 针对msql -->
+<mapper namespace="quartz">
+	<select id="getAllTasks" resultType="com.quartz.bean.TaskBean">
+		select * from task
+	</select>
+
+	<insert id="addTask" parameterType="com.quartz.bean.TaskBean">
+		INSERT INTO task (ID, NAME, TYPE, STATUS, IFAUTOBOOT, EXECUTIONPOLICY, TASKCLASS, DESCRIPTION, CREATEDATE, UPDATEDATE, OPERATOR) VALUES 
+		(#{id}, #{name}, #{type}, #{status}, #{ifAutoBoot}, #{executionPolicy}, #{taskClass},#{description}, #{createDate}, #{updateDate}, #{operator});
+	</insert>
+	
+	<update id="updateTask" parameterType="com.quartz.bean.TaskBean">
+		update task set NAME=#{name}, TYPE=#{type}, STATUS=#{status}, IFAUTOBOOT=#{ifAutoBoot}, EXECUTIONPOLICY=#{executionPolicy}, TASKCLASS=#{taskClass}, DESCRIPTION=#{description}, UPDATEDATE=now(), OPERATOR=#{operator} where ID=#{id}
+	</update>
+	
+	<delete id="deleteTask" parameterType="String">
+		delete from task where id=#{id}
+	</delete>
+	
+	
+	<select id="selectById" parameterType="String" resultType="com.quartz.bean.TaskBean">
+		select * from task where id=#{id}
+	</select>
+	
+	
+	<select id="selectByName" resultType="com.quartz.bean.TaskBean" parameterType="String">
+		select * from task where name like "%"#{name}"%"
+		<!-- select * from task where name like concat(concat('%',#{username}),'%') -->
+		<!-- select * from task where name like CONCAT('%','${name}','%') -->
+	</select>
+	
+</mapper>

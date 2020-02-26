@@ -1,0 +1,71 @@
+根据数据库动态加载定时任务
+
+任务表：task
+
+-- Create table
+create table TASK
+(
+  ID              VARCHAR2(32) not null,
+  NAME            VARCHAR2(64),
+  TYPE            VARCHAR2(32),
+  STATUS          VARCHAR2(8),
+  IFAUTOBOOT      VARCHAR2(8),
+  EXECUTIONPOLICY VARCHAR2(64),
+  TASKCLASS       VARCHAR2(128),
+  DESCRIPTION     VARCHAR2(2000),
+  CREATEDATE      DATE,
+  UPDATEDATE      DATE,
+  OPERATOR        VARCHAR2(64)
+)
+tablespace SDH_DATA
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64
+    next 1
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table TASK
+  is '任务列表';
+-- Add comments to the columns 
+comment on column TASK.ID
+  is 'id';
+comment on column TASK.NAME
+  is '名称';
+comment on column TASK.TYPE
+  is '类型';
+comment on column TASK.STATUS
+  is '初始状态';
+comment on column TASK.IFAUTOBOOT
+  is '是否自动启动';
+comment on column TASK.EXECUTIONPOLICY
+  is '执行策略';
+comment on column TASK.TASKCLASS
+  is '任务实现类';
+comment on column TASK.DESCRIPTION
+  is '描述';
+comment on column TASK.CREATEDATE
+  is '创建时间';
+comment on column TASK.UPDATEDATE
+  is '更新时间';
+comment on column TASK.OPERATOR
+  is '操作人';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table TASK
+  add constraint TASK_KEY primary key (ID)
+  using index 
+  tablespace SDH_DATA
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );

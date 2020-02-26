@@ -1,0 +1,3 @@
+SSM struts2+spring+mybatis项目的搭建 mysql
+
+日志记录+事务管理+定时任务动态加载

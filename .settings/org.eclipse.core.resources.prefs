@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/jsp/demo/success.jsp=UTF-8
+encoding//WebRoot/WEB-INF/jsp/quartz/Index.jsp=UTF-8
+encoding//config/db.properties=UTF-8
+encoding//src/com/ssm1/dao/impl/HelloDaoImpl.java=UTF-8

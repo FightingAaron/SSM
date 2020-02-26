@@ -1,0 +1,27 @@
+
+1。转发（服务器端跳转）
+ 
+  <action name="rederTo">
+          <result type="chain">hello</result>
+  </action>
+  <action name="hello">
+         <result>/WEB-INF/page/hello.jsp</result>
+  </action>
+访问路径为：http://localhost:8080/mystruts2/s/rederTo.action
+ 
+2。重定向（客户端跳转）
+ 
+  <action name="rederTo">
+         <result type="redirectAction">
+                <param name="actionName">hello</param>
+         </result>
+  </action>
+  <action name="hello">
+         <result>/WEB-INF/page/hello.jsp</result>
+  </action>
+
+  
+  
+  ps.转发是属于服务端操作,一次请求,一组request/responose
+  	 重定向属于客户端操作,会有两次请求,两组request/response 不会有request作用域共享
+  
